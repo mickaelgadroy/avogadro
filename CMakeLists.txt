@@ -230,9 +230,11 @@ find_package(Linguist) # find and setup Linguist
 if(NOT Linguist_FOUND)
   message(WARNING " Qt4 Linguist >= 4.5 not found, please install it if you want Avogadro translations")
 endif()
-find_package(Eigen2 REQUIRED) # find and setup Eigen2
+
 find_package(ZLIB REQUIRED)
 find_package(OpenBabel2 REQUIRED) # find and setup OpenBabel
+find_package(Eigen2 REQUIRED) # find and setup Eigen2
+
 
 # Check if we are building from a Git clone or a released version
 function(git_version dir version_var)

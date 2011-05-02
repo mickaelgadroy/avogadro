@@ -11,18 +11,15 @@ set (CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/COPYING")
 set (CPACK_PACKAGE_EXECUTABLES "avogadro" "Avogadro")
 set (CPACK_CREATE_DESKTOP_LINKS "avogadro")
 
-if(WIN32)
-  option(ENABLE_DEPRECATED_INSTALL_RULES "Should deprecated, Windows specific, install rules be enabled?" OFF)
-endif()
-if (WIN32 AND ENABLE_DEPRECATED_INSTALL_RULES)
+if (WIN32)
   # Set the directories to defaults if not set
 
   ##############################################
   # Zlib                                       #
   ##############################################
   find_file(zlib_DLL "zlib1.dll" PATHS
-    ${CMAKE_PREFIX_PATH}/bin
-    ${zlib_DIR}
+      "C:/src/zlib-1.2.3/projects/visualc6/Win32_DLL_Release"
+      ${ZLIB_DLL_DIR}
   )
   install(FILES ${zlib_DLL} DESTINATION bin)
 
@@ -33,12 +30,13 @@ if (WIN32 AND ENABLE_DEPRECATED_INSTALL_RULES)
       "C:/src/libxml2"
       "C:/src/libxml2-2.7.3"
       "C:/src/libxml2-2-7-3"
+      ${LIBXML_DIR}
   )
   find_file(libxml2_DLL "libxml2.dll" PATHS
-    "${libxml2_DIR}/win32/bin.msvc"
-    "${libxml2_DIR}/bin"
-    "${libxml2_DIR}/lib"
-    ${CMAKE_PREFIX_PATH}/lib
+      "${libxml2_DIR}/win32/bin.msvc"
+      "${libxml2_DIR}/bin"
+      "${libxml2_DIR}/lib"
+      ${LIBXML_DLL_DIR}
   )
   install(FILES ${libxml2_DLL} DESTINATION bin)
 
@@ -47,51 +45,62 @@ if (WIN32 AND ENABLE_DEPRECATED_INSTALL_RULES)
   ##############################################
   find_path(openbabel_SRCDIR "openbabel-2.0.pc.in" PATHS
       "C:/src/openbabel"
+      "C:/src/openbabel-2-2-1"
+      "C:/src/openbabel-2-2-x"
+      "C:/src/openbabel-2.2.1"
+      "C:/src/openbabel-2.2.x"
   )
+  
+  if( NOT EXISTS "${openbabel_SRCDIR}" )
+    find_path( openbabel_SRCDIR "openbabel-2.0.pc.cmake" PATHS ${OPENBABEL2_DIR} )
+  endif()
+  
+
+  # Data files needed by OpenBabel
+  file(GLOB openbabel_FILES "${openbabel_SRCDIR}/data/*.txt")
+  install(FILES ${openbabel_FILES} DESTINATION bin)
+  file(GLOB openbabel_FILES "${openbabel_SRCDIR}/data/*.par")
+  install(FILES ${openbabel_FILES} DESTINATION bin)
+  file(GLOB openbabel_FILES "${openbabel_SRCDIR}/data/*.prm")
+  install(FILES ${openbabel_FILES} DESTINATION bin)
+  file(GLOB openbabel_FILES "${openbabel_SRCDIR}/data/*.ff")
+  install(FILES ${openbabel_FILES} DESTINATION bin)
+
   find_path(openbabel_BINDIR "openbabel-2.dll" PATHS
-      "${CMAKE_PREFIX_PATH}/bin"
       "${openbabel_SRCDIR}/output/Release"
       "${openbabel_SRCDIR}/build/src/Release"
       "${openbabel_SRCDIR}/src/Release"
       "${openbabel_SRCDIR}/Release"
       "${openbabel_SRCDIR}"
+      ${OPENBABEL2_DLL_DIR}
   )
-
-  # Data files needed by OpenBabel
-  if(openbabel_SRCDIR)
-    file(GLOB openbabel_FILES "${openbabel_SRCDIR}/data/*.txt")
-    install(FILES ${openbabel_FILES} DESTINATION bin)
-    file(GLOB openbabel_FILES "${openbabel_SRCDIR}/data/*.par")
-    install(FILES ${openbabel_FILES} DESTINATION bin)
-    file(GLOB openbabel_FILES "${openbabel_SRCDIR}/data/*.prm")
-    install(FILES ${openbabel_FILES} DESTINATION bin)
-    file(GLOB openbabel_FILES "${openbabel_SRCDIR}/data/*.ff")
-    install(FILES ${openbabel_FILES} DESTINATION bin)
+  
+  if( EXISTS "${openbabel_BINDIR}/inchi.dll" )
+    set(openbabel_DLLs
+        "${openbabel_BINDIR}/openbabel-2.dll"
+        "${openbabel_BINDIR}/inchi.dll")
   else()
-    # Should be able to find them in the installed tree too
-    file(GLOB openbabel_FILES "${openbabel_BINDIR}/data/*.txt")
-    install(FILES ${openbabel_FILES} DESTINATION bin)
-    file(GLOB openbabel_FILES "${openbabel_BINDIR}/data/*.par")
-    install(FILES ${openbabel_FILES} DESTINATION bin)
-    file(GLOB openbabel_FILES "${openbabel_BINDIR}/data/*.prm")
-    install(FILES ${openbabel_FILES} DESTINATION bin)
-    file(GLOB openbabel_FILES "${openbabel_BINDIR}/data/*.ff")
-    install(FILES ${openbabel_FILES} DESTINATION bin)
+    set(openbabel_DLLs
+        "${openbabel_BINDIR}/openbabel-2.dll"
+        "${openbabel_BINDIR}/libinchi.dll")
   endif()
-
-  set(openbabel_DLLs
-      "${openbabel_BINDIR}/openbabel-2.dll"
-      "${openbabel_BINDIR}/inchi.dll")
+  
   install(FILES ${openbabel_DLLs} DESTINATION bin)
-
+  
   file(GLOB openbabel_FORMATS "${openbabel_BINDIR}/*.obf")
   install(FILES ${openbabel_FORMATS} DESTINATION bin)
 
   ##############################################
   # Qt                                         #
   ##############################################
-  get_filename_component(QT_BIN_DIR ${QT_QMAKE_EXECUTABLE} PATH)
-  find_path(qt_BINDIR "QtCore4.dll" PATH ${QT_BIN_DIR})
+  find_path(qt_BINDIR "QtCore4.dll" PATHS
+      "C:/src/qt-4.4.3/bin"
+      "C:/src/qt-4.4.4/bin"
+      "C:/src/qt-4.4.5/bin"
+      "C:/src/qt-4.5.0/bin"
+      "C:/src/qt-4.5.1/bin"
+      ${QT_BIN_DIR}
+  )
   set(qt_DEPS
     "${qt_BINDIR}/QtCore4.dll"
     "${qt_BINDIR}/QtGui4.dll"
@@ -105,9 +114,10 @@ if (WIN32 AND ENABLE_DEPRECATED_INSTALL_RULES)
   if(ENABLE_GLSL AND GLEW_FOUND)
     find_file(glew_DLL "glew32.dll" PATHS
         "C:/src/glew/bin"
+        ${GLEW_DLL_DIR}
     )
     install(FILES ${glew_DLL} DESTINATION bin)
-  endif()
+  endif(ENABLE_GLSL AND GLEW_FOUND)
 
   ##############################################
   # Python (Optional)                          #
@@ -191,9 +201,9 @@ if (WIN32 AND ENABLE_DEPRECATED_INSTALL_RULES)
     file(GLOB extensionScripts "${Avogadro_SOURCE_DIR}/libavogadro/src/extensions/python/*.py")
     install(FILES ${extensionScripts} DESTINATION bin/extensionScripts)
 
-  endif()
+  endif(ENABLE_PYTHON AND ALL_PYTHON_FOUND)
 
-endif()
+endif (WIN32)
 
 if(APPLE)
   set(CMAKE_OSX_ARCHITECTURES "ppc;i386")
