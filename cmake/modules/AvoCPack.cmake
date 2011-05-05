@@ -11,6 +11,10 @@ set (CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/COPYING")
 set (CPACK_PACKAGE_EXECUTABLES "avogadro" "Avogadro")
 set (CPACK_CREATE_DESKTOP_LINKS "avogadro")
 
+#SET (CPACK_GENERATOR "DEB")
+#SET (CPACK_DEBIAN_PACKAGE_DEPENDS 
+#SET (CPACK_DEBIAN_PACKAGE_MAINTAINER "Avogadro")
+
 if (WIN32)
   # Set the directories to defaults if not set
 
@@ -212,6 +216,7 @@ endif(APPLE)
 configure_file("${CMAKE_MODULE_PATH}/AvoCPackOptions.cmake.in"
   "${CMAKE_BINARY_DIR}/AvoCPackOptions.cmake" @ONLY)
 set(CPACK_PROJECT_CONFIG_FILE "${CMAKE_BINARY_DIR}/AvoCPackOptions.cmake")
+
 
 include(CPack)
 include(InstallRequiredSystemLibraries)
