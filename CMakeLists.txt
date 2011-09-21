@@ -322,15 +322,6 @@ else()
   message( STATUS "Wiimote plugins not enabled" )
 endif()
 
-if( CMAKE_SIZEOF_VOID_P EQUAL 8 )
-  message(STATUS "Run on an OS 64bits.")
-elseif( CMAKE_SIZEOF_VOID_P EQUAL 4 )
-  message(STATUS "Run on an OS 32bits.")
-else()
-  message(STATUS "SIZEOF_VOID_P unknown.")
-endif()
-
-
 # Should a self-contained package be created?
 option(ENABLE_AVO_PACKAGE "Enable creation of a self-contained package" OFF)
 if(ENABLE_AVO_PACKAGE)

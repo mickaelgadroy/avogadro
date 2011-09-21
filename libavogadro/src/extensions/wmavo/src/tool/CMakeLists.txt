@@ -31,9 +31,20 @@ set( wiiusecpp_lib_name wiiusecpp )
 #include(CheckTypeSize)
 #check_type_size("void*" CMAKE_SIZEOF_VOID_P BUILTIN_TYPES_ONLY)
 
+if( CMAKE_SIZEOF_VOID_P EQUAL 8 ) # 64 bits.
+  message( STATUS "Run on an OS 64bits., CMAKE_SIZEOF_VOID_P=" ${CMAKE_SIZEOF_VOID_P} )
+#  set( wiiuse_libdir "${wiiuse_dir}/lib_nix64" )
+#  set( wiiuse_libddir "${wiiuse_dir}/lib_nix64/debug" )
+elseif( CMAKE_SIZEOF_VOID_P EQUAL 4 ) # 32 bits.
+  message( STATUS "Run on an OS 32bits., CMAKE_SIZEOF_VOID_P=" ${CMAKE_SIZEOF_VOID_P} )
+#  set( wiiuse_libdir "${wiiuse_dir}/lib_nix32" )
+#  set( wiiuse_libddir "${wiiuse_dir}/lib_nix32/debug" )
+else() # Unknown.
+  message( STATUS "Impossible to detect if your compiler is 32 or 64 bits, CMAKE_SIZEOF_VOID_P=" ${CMAKE_SIZEOF_VOID_P} )
+endif()
+
 if( WIN32 )
 # Windows.
-
   # wiiuse/wiiusecpp libraries.
   set( wiiuse_libdir "${wiiuse_dir}/lib_win32" )
   set( wiiuse_libddir "${wiiuse_dir}/lib_win32/debug" )
@@ -42,17 +53,6 @@ else()
 # Unix ...
   set( wiiuse_libdir /usr/lib ) # ".lib"
   set( wiiuse_libddir /usr/lib ) # ".lib"
-  
-  # wiiuse/wiiusecpp libraries.
-  #if( CMAKE_SIZEOF_VOID_P EQUAL 8 ) # 64 bits.
-  #  set( wiiuse_libdir "${wiiuse_dir}/lib_nix64" )
-  #  set( wiiuse_libddir "${wiiuse_dir}/lib_nix64/debug" )
-  #elseif( CMAKE_SIZEOF_VOID_P EQUAL 4 ) # 32 bits.
-  #  set( wiiuse_libdir "${wiiuse_dir}/lib_nix32" )
-  #  set( wiiuse_libddir "${wiiuse_dir}/lib_nix32/debug" )
-  #else() # Unknown.
-  #  message( FATAL_ERROR "Impossible to detect if your compiler is 32 or 64 bits, CMAKE_SIZEOF_VOID_P=" ${CMAKE_SIZEOF_VOID_P} )
-  #endif()
   
   set( OpenBabel2_include_DIR "/usr/include/openbabel-2.0/" )
 
@@ -140,19 +140,14 @@ if( "${LINK_LIBS}" STREQUAL "avogadro" )
   target_link_libraries( ${PLUGIN_NAME} ${wiiusecpp_lib_name} )
   target_link_libraries( ${PLUGIN_NAME} ${QT_LIBRARIES} ${QT_QTOPENGL_LIBRARY} )
 
-  
   # To install wiiuse/wiiusecpp libraries (& other things)in the Avogadro bin.
-  #file( GLOB wiiuse_files ${wiiuse_lib_dir}/*wiiuse* )
-  #if( WIN32 ) 
-  #  install( FILES ${wiiuse_files} DESTINATION ${BIN_INSTALL_DIR} )
-   
-    #file( GLOB_RECURSE frag_files img/fragments/* )
-    #install( FILES ${frag_files} DESTINATION ${BIN_INSTALL_DIR}/../share/avogadro/fragments_resume )
+  file( GLOB wiiuse_files ${wiiuse_lib_dir}/*wiiuse* )
+  if( WIN32 ) 
+    install( FILES ${wiiuse_files} DESTINATION ${BIN_INSTALL_DIR} )
+    message( STATUS "Copy wiiuse/wiiusecpp librairies -> " ${BIN_INSTALL_DIR} )
   #else()
   #  install( FILES ${wiiuse_files} DESTINATION "/usr/lib" )
-  #endif()
-  
-  #message( STATUS "Copy " ${wiiuse_files} "->" ${BIN_INSTALL_DIR} )
+  endif()
   
 else()
 # In a stand alone compilation process.
@@ -306,6 +301,9 @@ else()
   
   message( STATUS "Be careful, do not forget compile and install wiiuse librairies (in extra/wiiuse_wiiusecpp/" )
   
+  #message( STATUS "Copy fragments" )
+  #file( GLOB_RECURSE frag_files img/fragments/* )
+  #install( FILES ${frag_files} DESTINATION ${BIN_INSTALL_DIR}/../share/avogadro/fragments_resume )
   
 endif()
 

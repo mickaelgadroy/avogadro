@@ -1198,7 +1198,7 @@ namespace Avogadro
 
     if( m_molecule!=NULL && fragment!=NULL )
     {
-      #if 1 // AVO_THING
+      #if 0 // AVO_THING
       // Original code of Avogadro
       // (except for updateBarycenter, and the returned value).
 
@@ -1423,12 +1423,14 @@ namespace Avogadro
         }
       }
 
-      // Get the added atoms. In fact, the molecule has been cleared.
-      // So we must find its, and adjust the barycenter.
+      // Get the added atoms. 
+      // In fact, the molecule has been cleared  (by the m_molecule->setOBMol()).
+      // So we must find new adress, and adjust the barycenter.
       if( endAtom != NULL )
       {
         int i=0 ;
 
+        // Initiate at zero the primitive list of selected atoms.
         if( addedPrim == NULL )
           addedPrim = new PrimitiveList() ;
         else
@@ -1553,11 +1555,13 @@ namespace Avogadro
           OpenBabel::OBBuilder::Connect( obmol, startAtomIndex+1, endAtomIndex+1 ) ;
 
          
-          // Do not adjust Hydrogen on startAtom because it is useless.
-          // Because : we do not remove Hydrogen on startAtom.
-
-          // Instead, Adjust the hydrogen of the endAtom.
+          // No Adjust the hydrogen of the startAtom.
+          // Because No hydrogen atoms removed on startAtom.
+          //addHydrogen_p( &obmol, startAtom ) ; *
+ 
+          // Adjust the hydrogen of the endAtom.
           addHydrogen_p( &obmol, endAtom ) ; //
+          mytoolbox::dbgMsg( "Add H" ) ;
 
           // Clear and initiate the Avogadro molecule by the OpenBabel molecule.
           m_molecule->setOBMol( &obmol ) ;
@@ -1569,8 +1573,22 @@ namespace Avogadro
       // So we must find its, and adjust the barycenter.
       if( endAtom != NULL )
       {
+        // --> If there was remove hydrogen atoms on startAtom.
+        //bool find=false ;
+        //QList<Atom*> neighborsStartAtom ;
+        //Atom *startA=m_molecule->atomById( startAtomIndex ) ;
+        //Atom *n=NULL ;
+
+        // Get the Hydrogen neighbors of the start atom.
+        //foreach( unsigned long ai, startA->neighbors() )
+        //{
+        //  n = m_molecule->atomById( ai ) ;
+        //  if( n->isHydrogen() )
+        //    neighborsStartAtom.append( n ) ;
+        //}
+        // <--
+
         int i=0 ;
-        QList<Atom*> neighborsStartAtom ;
 
         // Initiate the primitive list of selected atoms ...
         if( addedPrim == NULL )

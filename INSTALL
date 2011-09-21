@@ -4,29 +4,29 @@ Requirements
  -- CMake 2.6.0 or later (2.8.0 recommended)
  -- Qt 4.6.0 or later (4.7.0 recommended) 
      - Install QtCreator (speeder to install all Qt lib)
- -- OpenBabel 2.3.0 or later 
+ -- OpenBabel (openbabel and libopenbabel, 2.3.0 or later)
      - development version is recommended :
         http://openbabel.svn.sourceforge.net/svnroot/openbabel/openbabel/trunk
      - Debian package(1) : http://packages.debian.org/wheezy/i386/openbabel/download
      - Debian package(2) : http://packages.debian.org/wheezy/libopenbabel4
- -- Eigen 2.0.3 or later (libeigen 2.0.9 recommended)
- -- ZLib (zlib1g and zlib1g-dev)
+ -- Eigen 2.0.3 or later (libeigen, 2.0.9 recommended)
+ -- ZLib (zlib1g and zlib1g-dev, 1.2.5 recommended)
 
-cmake
-Basic Installation
-==================
+
+Basic Installation for Linux (for Windows, see after Advanced chapter)
+======================================================================
 These instructions give a very basic overview of how to configure, compile and
 install Avogadro on most systems.  If you are using unique install locations
 and/or libraries are not automatically detected please consult the 'Advanced'
 section.
-If you want to compile with a Wiimote, 
-  - launch the script : $ bash scripts/install-wiiuse.sh
-  - add an option in the cmake : cmake ../ -DENABLE_WMAVO=true
-  ( Maybe you need :
-    apt-get install glutg3 glutg3-dev libglew1.5 libglew1.5-dev"
-    apt-get install bluez libbluetooth-dev )
-
-
+If you want to compile with the Wiimote plugins:
+1- Verify some dependencies:
+    apt-get install glutg3 glutg3-dev libglew1.5 libglew1.5-dev
+    apt-get install bluez libbluetooth-dev
+2- Before to compile something, launch the script : bash scripts/install-wiiuse.sh
+3- In the cmake cmd, add an option (-DENABLE_WMAVO=true) : cmake ../ -DENABLE_WMAVO=true
+  
+  
 1. Create a 'build' directory in the package source directory.
 
    mkdir build
@@ -68,7 +68,8 @@ installation locations.
    -DENABLE_UPDATE_CHECKER : Enable checking for new Avogadro versions over the
                              network - Linux distributions may want to disable.
                              
-   -DENABLE_WMAVO : Enable the Wiimote in Avogadro (default = FALSE)
+   -DENABLE_WMAVO : Enable the build of the wmavo plugins (Wiimote in Avogadro)
+                    (default = FALSE)
                     
 
 For more information please consult the CMake documentation.
@@ -78,3 +79,12 @@ is installed to the location specified at compile time none of these variables
 need to be set.
 
 AVOGADRO_TRANSLATIONS - the location of the translation files.
+
+
+Basic Installation for Windows
+==============================
+1. You must install OpenbabelGUI (2.3.0) 
+    - http://openbabel.org -> Download section -> Windows installer
+2. You find in the "package" directory a Windows installer for Avogadro 
+    and the plugin for Wiimote, install it.
+2. Have a good time!

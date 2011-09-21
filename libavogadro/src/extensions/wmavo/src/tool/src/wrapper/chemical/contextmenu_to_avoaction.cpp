@@ -353,11 +353,13 @@ namespace Avogadro
             m_contextMenuSABF->setEnabled(true) ;
             m_contextMenuSABF->setTitle( "Substitute hydrogen by fragment" ) ;
           }
+          /*
           else if( !hasAddHydrogen && nbSelectedAtom==1 )
           { // Link atom to Fragment.
             m_contextMenuSABF->setEnabled(true) ;
             m_contextMenuSABF->setTitle( "Bond atom by fragment" ) ;
           }
+          */
           else if( nbSelectedAtom == 0 )
           { // Insert Fragment.
             m_contextMenuSABF->setTitle( "Insert fragment" ) ;
@@ -367,19 +369,6 @@ namespace Avogadro
           { // Do nothing.
             m_contextMenuSABF->setEnabled(false) ;
           }
-
-          /*
-          if( !hasAddHydrogen || (hasAddHydrogen && m_widget->selectedPrimitives().size()==1) )
-          {
-            m_contextMenuSABFResume->setEnabled(true) ;
-            m_contextMenuSABF->setEnabled(true) ;
-          }
-          else
-          {
-            m_contextMenuSABFResume->setEnabled(false) ;
-            m_contextMenuSABF->setEnabled(false) ;
-          }
-          */
 
           // Method 1
           //m_contextMenuMain->show() ; where is setPos !!?
