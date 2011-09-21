@@ -5,11 +5,6 @@
 
 set( PLUGIN_NAME wmtool )
 
-# None, Release, Debug ...
-# Windows : Debug and Release : ok
-# Linux : Release : ok, Debug : some librairies (like wiiuse) are not compiled for.
-set( CMAKE_BUILD_TYPE "Release" )
-
 # wmextension plugin source files.
 set( wmavoconst_include_dir ../ ) # .h (constants & revision)
 set( tool_include_dir src/ ) # .h (Tool extension)
@@ -55,6 +50,11 @@ else()
   set( wiiuse_libddir /usr/lib ) # ".lib"
   
   set( OpenBabel2_include_DIR "/usr/include/openbabel-2.0/" )
+  
+  # None, Release, Debug ...
+  # Windows : Debug and Release : ok
+  # Linux : Release : ok, Debug : some librairies (like wiiuse) are not compiled for.
+  set( CMAKE_BUILD_TYPE "Release" )
 
 endif()
 

@@ -1198,7 +1198,7 @@ namespace Avogadro
 
     if( m_molecule!=NULL && fragment!=NULL )
     {
-      #if 0 // AVO_THING
+      #if 1 // AVO_THING
       // Original code of Avogadro
       // (except for updateBarycenter, and the returned value).
 
@@ -1561,7 +1561,6 @@ namespace Avogadro
  
           // Adjust the hydrogen of the endAtom.
           addHydrogen_p( &obmol, endAtom ) ; //
-          mytoolbox::dbgMsg( "Add H" ) ;
 
           // Clear and initiate the Avogadro molecule by the OpenBabel molecule.
           m_molecule->setOBMol( &obmol ) ;

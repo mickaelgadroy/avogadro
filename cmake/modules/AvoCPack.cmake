@@ -21,7 +21,12 @@ if (WIN32)
   ##############################################
   # Zlib                                       #
   ##############################################
-  find_file(zlib_DLL "zlib1.dll" PATHS
+  if( "${CMAKE_BUILD_TYPE}" STREQUAL "Debug" )
+    set( zlib zlib1d.dll )
+  else()
+    set( zlib zlib1.dll )
+  endif()
+  find_file(zlib_DLL "${zlib}" PATHS
       "C:/src/zlib-1.2.3/projects/visualc6/Win32_DLL_Release"
       ${ZLIB_DLL_DIR}
   )
@@ -97,7 +102,19 @@ if (WIN32)
   ##############################################
   # Qt                                         #
   ##############################################
-  find_path(qt_BINDIR "QtCore4.dll" PATHS
+  if( "${CMAKE_BUILD_TYPE}" STREQUAL "Debug" )
+    set( qtCore QtCored4.dll )
+    set( qtGui QtGuid4.dll )
+    set( qtOpengl QtOpenGLd4.dll )
+    set( qtNetwork QtNetworkd4.dll )
+  else()
+    set( qtCore QtCore4.dll )
+    set( qtGui QtGui4.dll )
+    set( qtOpengl QtOpenGL4.dll )
+    set( qtNetwork QtNetwork4.dll )
+  endif()
+  
+  find_path(qt_BINDIR "${qtCore}" PATHS
       "C:/src/qt-4.4.3/bin"
       "C:/src/qt-4.4.4/bin"
       "C:/src/qt-4.4.5/bin"
@@ -106,17 +123,23 @@ if (WIN32)
       ${QT_BIN_DIR}
   )
   set(qt_DEPS
-    "${qt_BINDIR}/QtCore4.dll"
-    "${qt_BINDIR}/QtGui4.dll"
-    "${qt_BINDIR}/QtOpenGL4.dll"
-    "${qt_BINDIR}/QtNetwork4.dll")
+    "${qt_BINDIR}/${qtCore}"
+    "${qt_BINDIR}/${qtGui}"
+    "${qt_BINDIR}/${qtOpengl}"
+    "${qt_BINDIR}/${qtNetwork}")
   install(FILES ${qt_DEPS} DESTINATION bin)
 
   ##############################################
   # GLSL shaders (Optional)                    #
   ##############################################
+  if( "${CMAKE_BUILD_TYPE}" STREQUAL "Debug" )
+    set( glew glew32d.dll )
+  else()
+    set( glew glew32.dll )
+  endif()
+  
   if(ENABLE_GLSL AND GLEW_FOUND)
-    find_file(glew_DLL "glew32.dll" PATHS
+    find_file(glew_DLL "${glew}" PATHS
         "C:/src/glew/bin"
         ${GLEW_DLL_DIR}
     )
